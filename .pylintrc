@@ -16,7 +16,7 @@ persistent=yes
 
 # List of plugins (as comma separated values of python modules names) to load,
 # usually to register additional checkers.
-load-plugins=
+load-plugins=pylint.extensions.docparams
 
 # Use multiple processes to speed up Pylint.
 jobs=1
@@ -52,7 +52,9 @@ enable=use-symbolic-message-instead,useless-supression,fixme
 # no Warning level messages displayed, use"--disable=all --enable=classes
 # --disable=W"
 
-disable=
+# This is a bug in detecting bad continuation. Since black is handling the code
+# formatting, we can disable C0330 safely.
+disable=C0330
 
 
 [REPORTS]
@@ -98,7 +100,7 @@ notes=FIXME,XXX,TODO
 [SIMILARITIES]
 
 # Minimum lines number of a similarity.
-min-similarity-lines=4
+min-similarity-lines=8
 
 # Ignore comments when computing similarities.
 ignore-comments=yes
@@ -144,7 +146,7 @@ single-line-if-stmt=no
 no-space-check=trailing-comma,dict-separator
 
 # Maximum number of lines in a module
-max-module-lines=2000
+max-module-lines=1024
 
 # String used as indentation unit. This is usually " " (4 spaces) or "\t" (1
 # tab).
@@ -246,6 +248,8 @@ docstring-min-length=-1
 # List of decorators that define properties, such as abc.abstractproperty.
 property-classes=abc.abstractproperty
 
+default-docstring-type=google
+
 
 [TYPECHECK]
 
@@ -269,8 +273,7 @@ generated-members=REQUEST,acl_users,aq_parent
 
 # List of decorators that create context managers from functions, such as
 # contextlib.contextmanager.
-contextmanager-decorators=contextlib.contextmanager
-
+contextmanager-decorators=contextlib.contextmanager,tensorflow.python.util.tf_contextlib.contextmanager
 
 [SPELLING]
 
@@ -308,7 +311,7 @@ max-returns=11
 max-branches=100
 
 # Maximum number of statements in function / method body
-max-statements=200
+max-statements=128
 
 # Maximum number of parents for a class (see R0901).
 max-parents=7
@@ -343,6 +346,9 @@ exclude-protected=_asdict,_fields,_replace,_source,_make
 
 # Deprecated modules which should not be used, separated by a comma
 deprecated-modules=regsub,TERMIOS,Bastion,rexec
+
+# Modules which may not be installed beforehand
+ignored-modules=Tool
 
 # Create a graph of every (i.e. internal and external) dependencies in the
 # given file (report RP0402 must not be disabled)
